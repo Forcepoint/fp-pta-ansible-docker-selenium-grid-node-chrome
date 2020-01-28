@@ -1,0 +1,80 @@
+---
+
+- name: ensure the docker build directory exists
+  file:
+    path: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}"
+    state: directory
+    mode: 0700
+
+- name: copy the dockerfile
+  template:
+    src: templates/Dockerfile
+    dest: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}/Dockerfile"
+    mode: 0700
+
+- name: copy the nssdb
+  copy:
+    src: "{{ docker_selenium_grid_node_chrome_nssdb }}"
+    dest: "{{ docker_build_dir.path }}/nssdb"
+      mode: 0700
+  when: docker_selenium_grid_node_chrome_nssdb is defined
+
+- name: bring up selenium grid chrome node with test files
+  become: yes
+  docker_compose:
+    project_name: "{{ docker_selenium_grid_node_chrome_project_name }}"
+    definition:
+      version: '2'
+      services:
+        chrome:
+          build: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}"
+          container_name: "{{ docker_selenium_grid_node_chrome_container_name }}"
+          ports:
+            - "{{ docker_selenium_grid_node_chrome_port }}:{{ docker_selenium_grid_node_chrome_port }}"
+            - "{{ docker_selenium_grid_node_chrome_vnc_port }}:5900"
+          volumes:
+            - /dev/shm:/dev/shm
+            - "{{ docker_selenium_grid_node_chrome_test_files }}:/home/seluser/test_files/"
+          environment:
+            HUB_HOST: "{{ docker_selenium_grid_node_chrome_hub_dns }}"
+            HUB_PORT: "{{ docker_selenium_grid_node_chrome_hub_port }}"
+            REMOTE_HOST: "http://{{ docker_selenium_grid_node_chrome_dns }}:{{ docker_selenium_grid_node_chrome_port }}"
+            NODE_MAX_INSTANCES: "{{ docker_selenium_grid_node_chrome_instances }}"
+            SCREEN_WIDTH: "{{ docker_selenium_grid_node_chrome_screen_width }}"
+            SCREEN_HEIGHT: "{{ docker_selenium_grid_node_chrome_screen_height }}"
+          restart: always
+  register: docker_compose_output
+  when: docker_selenium_grid_node_chrome_test_files is defined
+
+- name: bring up selenium grid chrome node without test files
+  become: yes
+  docker_compose:
+    project_name: "{{ docker_selenium_grid_node_chrome_project_name }}"
+    definition:
+      version: '2'
+      services:
+        chrome:
+          build: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}"
+          container_name: "{{ docker_selenium_grid_node_chrome_container_name }}"
+          ports:
+            - "{{ docker_selenium_grid_node_chrome_port }}:{{ docker_selenium_grid_node_chrome_port }}"
+            - "{{ docker_selenium_grid_node_chrome_vnc_port }}:5900"
+          volumes:
+            - /dev/shm:/dev/shm
+          environment:
+            HUB_HOST: "{{ docker_selenium_grid_node_chrome_hub_dns }}"
+            HUB_PORT: "{{ docker_selenium_grid_node_chrome_hub_port }}"
+            REMOTE_HOST: "http://{{ docker_selenium_grid_node_chrome_dns }}:{{ docker_selenium_grid_node_chrome_port }}"
+            NODE_MAX_INSTANCES: "{{ docker_selenium_grid_node_chrome_instances }}"
+            SCREEN_WIDTH: "{{ docker_selenium_grid_node_chrome_screen_width }}"
+            SCREEN_HEIGHT: "{{ docker_selenium_grid_node_chrome_screen_height }}"
+          restart: always
+  register: docker_compose_output
+  when: docker_selenium_grid_node_chrome_test_files is not defined
+
+- assert:
+    that:
+      - "docker_compose_output.ansible_facts.chrome.{{ docker_selenium_grid_node_chrome_container_name }}.state.running"
+
+- include_tasks: restart.yml
+  when: docker_selenium_grid_node_chrome_restart_always == true
