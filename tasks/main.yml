@@ -15,7 +15,7 @@
 - name: copy the nssdb
   copy:
     src: "{{ docker_selenium_grid_node_chrome_nssdb }}"
-    dest: "{{ docker_build_dir.path }}/nssdb"
+    dest: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}/nssdb"
     mode: 0700
   when: docker_selenium_grid_node_chrome_nssdb is defined
 
