@@ -43,7 +43,12 @@
             SCREEN_WIDTH: "{{ docker_selenium_grid_node_chrome_screen_width }}"
             SCREEN_HEIGHT: "{{ docker_selenium_grid_node_chrome_screen_height }}"
           restart: always
-  register: docker_compose_output
+  register: docker_compose_output_with_test_files
+  when: docker_selenium_grid_node_chrome_test_files is defined
+
+- assert:
+    that:
+      - "docker_compose_output_with_test_files.ansible_facts.chrome.{{ docker_selenium_grid_node_chrome_container_name }}.state.running"
   when: docker_selenium_grid_node_chrome_test_files is defined
 
 - name: bring up selenium grid chrome node without test files
@@ -69,12 +74,13 @@
             SCREEN_WIDTH: "{{ docker_selenium_grid_node_chrome_screen_width }}"
             SCREEN_HEIGHT: "{{ docker_selenium_grid_node_chrome_screen_height }}"
           restart: always
-  register: docker_compose_output
+  register: docker_compose_output_without_test_files
   when: docker_selenium_grid_node_chrome_test_files is not defined
 
 - assert:
     that:
-      - "docker_compose_output.ansible_facts.chrome.{{ docker_selenium_grid_node_chrome_container_name }}.state.running"
+      - "docker_compose_output_without_test_files.ansible_facts.chrome.{{ docker_selenium_grid_node_chrome_container_name }}.state.running"
+  when: docker_selenium_grid_node_chrome_test_files is not defined
 
 - include_tasks: restart.yml
   when: docker_selenium_grid_node_chrome_restart_always == true
