@@ -16,7 +16,7 @@
   copy:
     src: "{{ docker_selenium_grid_node_chrome_nssdb }}"
     dest: "{{ docker_build_dir.path }}/nssdb"
-      mode: 0700
+    mode: 0700
   when: docker_selenium_grid_node_chrome_nssdb is defined
 
 - name: bring up selenium grid chrome node with test files
