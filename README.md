@@ -47,7 +47,8 @@ You have a working Selenium Grid Hub.
   Again, use to specify a different compose project if you want to run multiple nodes on a single docker host.
 
 * docker_selenium_grid_node_chrome_restart_always: If yes, restart the OS when applying this role. Defaults to no.
-  This is useful if you fear that the grid is having longevity problems.
+  This is useful if you fear that the grid is having longevity problems, but it will bounce any VNC connection
+  to the node running at the time. If the VNC client can't cope with that, you'll have to manually reconnect.
 
 * docker_selenium_grid_node_chrome_nssdb: If this variable is defined, it is a path to a folder containing files to places in `/home/seluser/.pki/nssdb`.
   This path is assumed to be on the ansible originator/master, not on the ansible target machine.
@@ -75,7 +76,9 @@ You have a working Selenium Grid Hub.
   Your docker container will not cope well with the deletion of the mount point while it's running.
   You can either use the `docker_selenium_grid_node_chrome_restart_always` option, which should solve this problem by forcing a restart of the container
   upon OS reboot, or you can place your test files in a subfolder of the path specified by this variable, 
-  and delete/recreate that subfolder.
+  and delete/recreate that subfolder. If the mount was on a folder that was recreated every build, 
+  docker wouldn't honor the mount unless the container was restarted. 
+  That restart is something to avoid because it will bounce every VNC connection made to the container.
   
   I would suggest using Artifactory to host the test files, and perform a couple tasks prior to running this role
   that deletes and recreates the folder and re-downloads all the files from Artifactory using jfrog cli, 
