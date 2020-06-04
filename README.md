@@ -9,7 +9,7 @@ For more information: https://github.com/SeleniumHQ/docker-selenium
 
 ## Requirements
 
-You have a working Selenium Grid Hub.
+You have a working Selenium Grid Hub and the host is setup as a docker host.
 
 ## Role Variables
 
