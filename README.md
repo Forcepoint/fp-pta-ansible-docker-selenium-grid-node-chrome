@@ -7,6 +7,8 @@ You can access the Node's sessions at an address similar to this: http://selenno
 
 For more information: https://github.com/SeleniumHQ/docker-selenium
 
+For information about PTA and how to use it with this Ansible role please visit https://github.com/Forcepoint/fp-pta-overview/blob/master/README.md
+
 ## Requirements
 
 You have a working Selenium Grid Hub and the host is setup as a docker host.
