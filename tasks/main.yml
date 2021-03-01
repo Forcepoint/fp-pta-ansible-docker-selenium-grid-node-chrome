@@ -77,10 +77,5 @@
   register: docker_compose_output_without_test_files
   when: docker_selenium_grid_node_chrome_test_files is not defined
 
-- assert:
-    that:
-      - "docker_compose_output_without_test_files.ansible_facts.chrome.{{ docker_selenium_grid_node_chrome_container_name }}.state.running"
-  when: docker_selenium_grid_node_chrome_test_files is not defined
-
 - include_tasks: restart.yml
   when: docker_selenium_grid_node_chrome_restart_always == true
