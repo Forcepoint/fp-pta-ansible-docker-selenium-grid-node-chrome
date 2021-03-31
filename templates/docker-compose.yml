@@ -9,6 +9,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
       {% if docker_selenium_grid_node_chrome_test_files is defined %}- "{{ docker_selenium_grid_node_chrome_test_files }}:/home/seluser/test_files/"{% endif %}
+
     environment:
       HUB_HOST: "{{ docker_selenium_grid_node_chrome_hub_dns }}"
       HUB_PORT: "{{ docker_selenium_grid_node_chrome_hub_port }}"
