@@ -1,15 +1,15 @@
 ---
 
 - name: restart the os
-  command: /sbin/shutdown -r +1
+  ansible.builtin.command: /sbin/shutdown -r +1
   async: 0
   poll: 0
   become: yes
   ignore_errors: yes
 
 - name: sleep for 1 minute
-  wait_for: timeout=90
+  ansible.builtin.wait_for: timeout=90
   delegate_to: localhost
 
 - name: wait for os to come back up
-  wait_for_connection:
+  ansible.builtin.wait_for_connection:
