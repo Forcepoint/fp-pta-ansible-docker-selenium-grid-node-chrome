@@ -37,6 +37,7 @@
     name: selenium/node-chrome-debug
     tag: "{{ docker_selenium_grid_node_chrome_version }}"
     source: pull
+    force_source: yes
 
 - name: docker-compose build --pull
   become: yes
