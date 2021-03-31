@@ -1,0 +1,20 @@
+version: '2'
+services:
+  chrome:
+    build: "{{ docker_selenium_grid_node_chrome_docker_build_dir }}"
+    container_name: "{{ docker_selenium_grid_node_chrome_container_name }}"
+    ports:
+      - "{{ docker_selenium_grid_node_chrome_port }}:{{ docker_selenium_grid_node_chrome_port }}"
+      - "{{ docker_selenium_grid_node_chrome_vnc_port }}:5900"
+    volumes:
+      - /dev/shm:/dev/shm
+      {% if docker_selenium_grid_node_chrome_test_files is defined %}- "{{ docker_selenium_grid_node_chrome_test_files }}:/home/seluser/test_files/"{% endif %}
+
+    environment:
+      HUB_HOST: "{{ docker_selenium_grid_node_chrome_hub_dns }}"
+      HUB_PORT: "{{ docker_selenium_grid_node_chrome_hub_port }}"
+      REMOTE_HOST: "http://{{ docker_selenium_grid_node_chrome_dns }}:{{ docker_selenium_grid_node_chrome_port }}"
+      NODE_MAX_INSTANCES: "{{ docker_selenium_grid_node_chrome_instances }}"
+      SCREEN_WIDTH: "{{ docker_selenium_grid_node_chrome_screen_width }}"
+      SCREEN_HEIGHT: "{{ docker_selenium_grid_node_chrome_screen_height }}"
+    restart: always
