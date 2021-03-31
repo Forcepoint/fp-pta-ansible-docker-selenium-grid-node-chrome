@@ -31,6 +31,13 @@
     mode: 0700
   when: docker_selenium_grid_node_chrome_nssdb is defined
 
+- name: docker pull node-chrome-debug
+  become: yes
+  community.docker.docker_image:
+    name: selenium/node-chrome-debug
+    tag: "{{ docker_selenium_grid_node_chrome_version }}"
+    source: pull
+
 - name: docker-compose build --pull
   become: yes
   docker_compose:
