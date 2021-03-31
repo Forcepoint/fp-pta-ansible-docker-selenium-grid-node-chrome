@@ -5,7 +5,7 @@ docker_selenium_grid_node_chrome_instances: 1
 docker_selenium_grid_node_chrome_vnc_port: 5900
 docker_selenium_grid_node_chrome_screen_width: 1920
 docker_selenium_grid_node_chrome_screen_height: 1080
-docker_selenium_grid_node_chrome_docker_compose_dir: /home/{{ remote_user }}/docker_selenium_grid_node_chrome_docker_compose
+docker_selenium_grid_node_chrome_docker_compose_dir: /home/{{ ansible_user }}/docker_selenium_grid_node_chrome_docker_compose
 docker_selenium_grid_node_chrome_docker_build_dir: "{{ docker_selenium_grid_node_chrome_docker_compose_dir }}/build"
 docker_selenium_grid_node_chrome_container_name: "chrome"
 docker_selenium_grid_node_chrome_project_name: "seleniumgridnodechrome"
