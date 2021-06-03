@@ -8,6 +8,8 @@ services:
       - "{{ docker_selenium_grid_node_chrome_vnc_port }}:5900"
     volumes:
       - /dev/shm:/dev/shm
+      # The local timezone needs to be made available to the container so an accurate time can be obtained.
+      - /etc/localtime:/etc/localtime:ro
       {% if docker_selenium_grid_node_chrome_test_files is defined %}- "{{ docker_selenium_grid_node_chrome_test_files }}:/home/seluser/test_files/"{% endif %}
 
     environment:
